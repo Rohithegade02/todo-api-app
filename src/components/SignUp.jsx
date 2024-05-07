@@ -113,6 +113,7 @@ const SignUp = () => {
         user.password,
         import.meta.env.VITE_HASHED_PASSWORD,
       )
+
       const data = { ...user, password: hashedPassword, token }
       dispatch(setData(data)) //dispatch it to store
       localStorage.setItem('user', JSON.stringify(data)) //save it to localStorage
@@ -124,6 +125,8 @@ const SignUp = () => {
       navigate('/login') //navigate to login page
     }
   }
+
+  console.log(import.meta.env.VITE_HASHED_PASSWORD)
   return (
     <div className='border border-slate-900'>
       <form

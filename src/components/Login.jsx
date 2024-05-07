@@ -144,7 +144,7 @@ const Login = () => {
           <p>
             Don&apos;t have an account?{' '}
             <span
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/')}
               className='text-[#2196f3] cursor-pointer underline-offset-1'
             >
               Create
