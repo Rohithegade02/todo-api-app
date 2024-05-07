@@ -1,54 +1,86 @@
-import { Button, TextField, Typography } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../slice/authSlice'
-
+import { compareSync } from 'bcryptjs'
 const Login = () => {
-  const token = useSelector(state => state?.user?.user?.token)
-  console.log(token)
+  const token = useSelector(state => state?.user?.user?.token) //subscribe to store token
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [user, setUser] = useState({
     email: '',
     password: '',
   })
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [error, setError] = useState('')
+  const [emailError, setEmailError] = useState({
+    //email error
+    status: false,
+    message: '',
+  })
+  const [passwordError, setPasswordError] = useState({
+    // password error
+    status: false,
+    message: '',
+  })
+  const [error, setError] = useState('') //throws error when on invalid crentionals
 
   const handleChange = e => {
     const value = e.target.value
     const name = e.target.name
     setUser({ ...user, [name]: value })
     if (name === 'email' && value.trim() !== '') {
-      setEmailError('')
+      setEmailError({
+        status: false,
+        message: '',
+      })
     } else if (name === 'password' && value.trim() !== '') {
-      setPasswordError('')
+      setPasswordError({
+        status: false,
+        message: '',
+      })
     }
   }
   const handleSubmit = e => {
     e.preventDefault()
 
-    setEmailError('')
-    setPasswordError('')
-    const storedUser = JSON.parse(localStorage.getItem('user'))
-    if (!user.email) {
-      setEmailError('Email is required')
-      return
-    } else if (!user.password) {
-      setPasswordError('Password is required')
-      return
-    } else if (
-      storedUser.email !== user.email ||
-      storedUser.password !== user.password
-    ) {
-      setError('Invalid Credentials')
-      return
+    setEmailError({
+      status: false,
+      message: '',
+    })
+    setPasswordError({
+      status: false,
+      message: '',
+    })
+    const storedUser = JSON.parse(localStorage.getItem('user')) //fetching signup data from local storage
+    if (storedUser) {
+      if (!user.email) {
+        //if email is not present
+        setEmailError({
+          status: true,
+          message: 'Email is required',
+        })
+        return
+      } else if (!user.password) {
+        //if password is not present
+        setPasswordError({
+          status: true,
+          message: 'Password is required',
+        })
+        return
+      } else if (
+        storedUser.email !== user.email || //check whether the local storage email is equal to current user email
+        compareSync(user.password, storedUser.password) === false //used bcrypt to compare password
+      ) {
+        setError('Invalid Credentials')
+        return
+      } else {
+        setError('')
+        dispatch(login({ token, user }))
+        navigate('/todo')
+      }
     } else {
-      setError('')
-      dispatch(login({ token, user }))
-      navigate('/todo')
+      setError('Please register to Login')
+      return
     }
   }
 
@@ -56,11 +88,9 @@ const Login = () => {
     <div className='border border-slate-900'>
       <form
         onSubmit={handleSubmit}
-        className='flex justify-center h-[100vh] flex-col items-center gap-5 border-5 border-[#000] p-5'
+        className='flex justify-center h-[100vh] flex-col items-center gap-5  p-5'
       >
-        <Typography fontSize={20} fontWeight={600}>
-          Login
-        </Typography>
+        <p className='text-[20px] font-bold'>Login</p>
 
         <div>
           <TextField
@@ -70,8 +100,12 @@ const Login = () => {
             value={user.email}
             onChange={handleChange}
             placeholder='Email'
-            error={emailError}
-            helperText={emailError}
+            error={emailError.status}
+            helperText={emailError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
         <div>
@@ -82,18 +116,36 @@ const Login = () => {
             value={user.password}
             onChange={handleChange}
             placeholder='password'
-            error={passwordError}
-            helperText={passwordError}
+            error={passwordError.status}
+            helperText={passwordError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
-        {error}
-        <Button type='submit'>Login</Button>
+        <p className='text-[#cc0000]'>{error} </p>
+        <Button
+          type='submit'
+          sx={{
+            background: '#2196F3',
+            color: 'white',
+            width: '60vw',
+            textTransform: 'none',
+            '@media (min-width: 600px)': { width: '30vw' },
+            '&:hover': {
+              backgroundColor: '#2196F3',
+            },
+          }}
+        >
+          Login
+        </Button>
         <div>
           <p>
             Don&apos;t have an account?{' '}
             <span
               onClick={() => navigate('/signup')}
-              className='text-[blue] cursor-pointer'
+              className='text-[#2196f3] cursor-pointer underline-offset-1'
             >
               Create
             </span>

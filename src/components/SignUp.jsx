@@ -1,36 +1,63 @@
-import { Button, TextField, Typography } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setData } from '../slice/UserSlice'
 import { useNavigate } from 'react-router-dom'
+import bcrypt from 'bcryptjs'
 const SignUp = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [user, setUser] = useState({
+    //initialized user state
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   })
-  const [nameError, setNameError] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [nameError, setNameError] = useState({
+    //name error state
+    status: false,
+    message: '',
+  })
+  const [emailError, setEmailError] = useState({
+    //email error state
+    status: false,
+    message: '',
+  })
+  const [passwordError, setPasswordError] = useState({
+    //password error state
+    status: false,
+    message: '',
+  })
+  const [confirmPasswordError, setConfirmPasswordError] = useState({
+    //confirm password error state
+    status: false,
+    message: '',
+  })
 
   const handleChange = e => {
     const value = e.target.value
     const name = e.target.name
     setUser({ ...user, [name]: value })
     if (name === 'name' && value.trim() !== '') {
-      setNameError('')
+      setNameError({
+        status: false,
+        message: '',
+      })
     } else if (name === 'email' && value.trim() !== '') {
-      setEmailError('')
+      setEmailError({
+        status: false,
+        message: '',
+      })
     } else if (name === 'password' && value.trim() !== '') {
-      setPasswordError('')
+      setPasswordError({
+        status: false,
+        message: '',
+      })
     }
   }
   const generateToken = () => {
-    // Simple token generation (for demonstration only)
+    //  token generation in frontend
     return (
       Math.random().toString(36).substr(2) +
       Math.random().toString(36).substr(2)
@@ -39,34 +66,62 @@ const SignUp = () => {
   const handleSubmit = e => {
     e.preventDefault()
 
-    setNameError('')
-    setEmailError('')
-    setPasswordError('')
-    setConfirmPasswordError('')
+    setNameError({
+      message: '',
+      status: false,
+    })
+    setEmailError({
+      message: '',
+      status: false,
+    })
+    setPasswordError({
+      message: '',
+      status: false,
+    })
+    setConfirmPasswordError({
+      message: '',
+      status: false,
+    })
 
     if (!user.name) {
-      setNameError('Name is required')
+      setNameError({
+        status: true,
+        message: 'Name is required',
+      })
       return
     } else if (!user.email) {
-      setEmailError('Email is required')
+      setEmailError({
+        status: true,
+        message: 'Email is required',
+      })
       return
     } else if (!user.password) {
-      setPasswordError('Password is required')
+      setPasswordError({
+        status: true,
+        message: 'Password is required',
+      })
       return
     } else if (user.password !== user.confirmPassword) {
-      setConfirmPasswordError('Confirm Password should match password')
+      setConfirmPasswordError({
+        status: true,
+        message: 'Passwords do not match',
+      })
     } else {
-      const token = generateToken()
-      const data = { ...user, token }
-      dispatch(setData(data))
-      localStorage.setItem('user', JSON.stringify(data))
+      const token = generateToken() //generate token
+      const hashedPassword = bcrypt.hashSync(
+        //using bcrypt libaray to generate hashed password
+        user.password,
+        import.meta.env.VITE_HASHED_PASSWORD,
+      )
+      const data = { ...user, password: hashedPassword, token }
+      dispatch(setData(data)) //dispatch it to store
+      localStorage.setItem('user', JSON.stringify(data)) //save it to localStorage
       setUser({
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
       })
-      navigate('/login')
+      navigate('/login') //navigate to login page
     }
   }
   return (
@@ -75,9 +130,7 @@ const SignUp = () => {
         onSubmit={handleSubmit}
         className='flex justify-center h-[100vh] flex-col items-center gap-5 border-5 border-[#000] p-5'
       >
-        <Typography fontSize={20} fontWeight={600}>
-          Sign Up
-        </Typography>
+        <p className='text-[20px] font-bold'>Sign Up</p>
         <div>
           <TextField
             label='Name'
@@ -86,8 +139,12 @@ const SignUp = () => {
             value={user.name}
             onChange={handleChange}
             placeholder='Name'
-            error={nameError}
-            helperText={nameError}
+            error={nameError.status}
+            helperText={nameError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
         <div>
@@ -98,8 +155,12 @@ const SignUp = () => {
             value={user.email}
             onChange={handleChange}
             placeholder='Email'
-            error={emailError}
-            helperText={emailError}
+            error={emailError.status}
+            helperText={emailError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
         <div>
@@ -110,8 +171,12 @@ const SignUp = () => {
             value={user.password}
             onChange={handleChange}
             placeholder='password'
-            error={passwordError}
-            helperText={passwordError}
+            error={passwordError.status}
+            helperText={passwordError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
         <div>
@@ -122,17 +187,32 @@ const SignUp = () => {
             value={user.confirmPassword}
             onChange={handleChange}
             placeholder='Confirm Password'
-            password={confirmPasswordError}
-            helperText={confirmPasswordError}
+            password={confirmPasswordError.status}
+            helperText={confirmPasswordError.message}
+            sx={{
+              width: '60vw',
+              '@media (min-width: 600px)': { width: '30vw' },
+            }}
           />
         </div>
-        <Button type='submit'>Sign Up</Button>
+        <Button
+          type='submit'
+          sx={{
+            background: '#2196F3',
+            color: 'white',
+            width: '60vw',
+            textTransform: 'none',
+            '@media (min-width: 600px)': { width: '30vw' },
+          }}
+        >
+          Sign Up
+        </Button>
         <div>
           <p>
             Already have an account?{' '}
             <span
               onClick={() => navigate('/login')}
-              className='text-[blue] cursor-pointer'
+              className='text-[#2196f3] cursor-pointer'
             >
               Login
             </span>

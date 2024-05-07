@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+//initialState of user
 const initialState = {
   user: null,
   isLoading: false,
@@ -10,17 +11,20 @@ const UserSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    //loading state
     setLoading: state => {
       state.isLoading = true
     },
+    //sets the data
     setData: (state, action) => {
       state.user = action.payload
-      state.isLoading = false // Assuming you want to set isLoading to false after data is set
-      state.error = null // Reset error when data is set successfully
+      state.isLoading = false
+      state.error = null
     },
+    //throws error
     setError: (state, action) => {
       state.error = action.payload
-      state.isLoading = false // Set isLoading to false when error occurs
+      state.isLoading = false
     },
   },
 })
