@@ -114,14 +114,13 @@ const SignUp = () => {
         import.meta.env.VITE_HASHED_PASSWORD,
       )
 
-      const data = { ...user, password: hashedPassword, token }
-      dispatch(setData(data)) //dispatch it to store
-      localStorage.setItem('user', JSON.stringify(data)) //save it to localStorage
-      setUser({
-        name: '',
-        email: '',
-        password: '',
-      })
+      const { confirmPassword, ...userData } = user
+      const data = { ...userData, password: hashedPassword, token }
+
+      dispatch(setData(data))
+      localStorage.setItem('user', JSON.stringify(data))
+
+      setUser({ name: '', email: '', password: '', confirmPassword: '' })
       navigate('/login') //navigate to login page
     }
   }

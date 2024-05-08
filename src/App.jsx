@@ -16,6 +16,8 @@ function App() {
     <div className='max-w-[100vw]'>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={<SignUp />} />
+          <Route path='/login' element={<Login />} />
           {/* Private route only can be accessed using token */}
           <Route
             path='/todo'
@@ -25,8 +27,6 @@ function App() {
               </PrivateOutlet>
             }
           />
-          <Route path='/' element={<SignUp />} />
-          <Route path='/login' element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>
