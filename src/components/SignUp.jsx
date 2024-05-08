@@ -126,7 +126,6 @@ const SignUp = () => {
     }
   }
 
-  console.log(import.meta.env.VITE_HASHED_PASSWORD)
   return (
     <div className='border border-slate-900'>
       <form
@@ -147,6 +146,7 @@ const SignUp = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -163,6 +163,7 @@ const SignUp = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -179,6 +180,7 @@ const SignUp = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -195,6 +197,7 @@ const SignUp = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -203,9 +206,13 @@ const SignUp = () => {
           sx={{
             background: '#2196F3',
             color: 'white',
-            width: '60vw',
+            '&:hover': {
+              backgroundColor: '#2196F3',
+            },
             textTransform: 'none',
+            width: '60vw',
             '@media (min-width: 600px)': { width: '30vw' },
+            '@media (max-width: 1024px)': { width: '50vw' },
           }}
         >
           Sign Up

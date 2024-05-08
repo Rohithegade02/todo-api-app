@@ -9,6 +9,7 @@ import TodoList from './components/TodoList'
 import SignUp from './components/SignUp'
 import Login from './components/Login'
 import { useSelector } from 'react-redux'
+import PrivateOutlet from './components/PrivateOutlet'
 
 function App() {
   return (
@@ -16,9 +17,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Private route only can be accessed using token */}
-          <Route element={<PrivateOutlet />}>
-            <Route path='/todo' element={<TodoList />} />
-          </Route>
+          <Route
+            path='/todo'
+            element={
+              <PrivateOutlet>
+                <TodoList />
+              </PrivateOutlet>
+            }
+          />
           <Route path='/' element={<SignUp />} />
           <Route path='/login' element={<Login />} />
         </Routes>
@@ -26,9 +32,5 @@ function App() {
     </div>
   )
 }
-//private outlet function check whether component is authenticated or not (if not it redirects to the login page)
-function PrivateOutlet() {
-  const auth = useSelector(state => state?.auth?.isAuthenticated)
-  return auth ? <Outlet /> : <Navigate to='/login' />
-}
+
 export default App

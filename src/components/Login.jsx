@@ -105,6 +105,7 @@ const Login = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -121,6 +122,7 @@ const Login = () => {
             sx={{
               width: '60vw',
               '@media (min-width: 600px)': { width: '30vw' },
+              '@media (max-width: 1024px)': { width: '50vw' },
             }}
           />
         </div>
@@ -130,9 +132,10 @@ const Login = () => {
           sx={{
             background: '#2196F3',
             color: 'white',
-            width: '60vw',
             textTransform: 'none',
+            width: '60vw',
             '@media (min-width: 600px)': { width: '30vw' },
+            '@media (max-width: 1024px)': { width: '50vw' },
             '&:hover': {
               backgroundColor: '#2196F3',
             },

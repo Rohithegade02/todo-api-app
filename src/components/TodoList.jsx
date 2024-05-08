@@ -153,10 +153,8 @@ const TodoList = () => {
               sx={{
                 background: 'black',
                 color: '#fff',
-
                 padding: '15px',
                 textTransform: 'none',
-
                 fontWeight: 600,
                 '&:hover': {
                   backgroundColor: 'black',
@@ -175,6 +173,7 @@ const TodoList = () => {
                 backgroundColor: 'white',
                 width: '10vw',
                 '@media (max-width: 768px )': { width: '30vw' },
+                '@media (max-width:1024px )': { width: '30vw' },
               }}
               onChange={e => setFilterTask(e.target.value)}
             >
@@ -199,6 +198,7 @@ const TodoList = () => {
                 width: '70vw',
                 '@media (min-width: 600px)': { width: '30vw' },
                 '@media (max-width: 768px )': { width: '60vw' },
+                '@media (max-width:1024px )': { width: '60vw' },
               }}
             >
               <form
